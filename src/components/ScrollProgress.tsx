@@ -1,0 +1,38 @@
+import { useEffect, useRef } from 'react'
+import { gsap } from '../lib/gsap'
+import { motion } from '../lib/motion'
+
+/** Bar progres tipis di atas + penunjuk persen ala HUD di pojok kanan bawah. */
+export function ScrollProgress() {
+  const barRef = useRef<HTMLDivElement>(null)
+  const labelRef = useRef<HTMLSpanElement>(null)
+
+  useEffect(() => {
+    let last = -1
+    const tick = () => {
+      const progress = motion.scroll.progress
+      if (Math.abs(progress - last) < 0.0005) return
+      last = progress
+      if (barRef.current) barRef.current.style.transform = `scaleX(${progress})`
+      if (labelRef.current) {
+        labelRef.current.textContent = String(Math.round(progress * 100)).padStart(3, '0')
+      }
+    }
+    gsap.ticker.add(tick)
+    return () => gsap.ticker.remove(tick)
+  }, [])
+
+  return (
+    <>
+      <div aria-hidden="true" className="fixed inset-x-0 top-0 z-[95] h-0.5 bg-bone/10">
+        <div ref={barRef} className="h-full origin-left scale-x-0 bg-acid" />
+      </div>
+      <div
+        aria-hidden="true"
+        className="hud pointer-events-none fixed right-5 bottom-5 z-[70] hidden text-bone mix-blend-difference md:block"
+      >
+        Scroll <span ref={labelRef}>000</span>%
+      </div>
+    </>
+  )
+}
