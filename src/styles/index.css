@@ -1,0 +1,167 @@
+@import 'tailwindcss';
+@import './effects.css';
+
+/* ───────────────────────── Design tokens ───────────────────────── */
+
+@theme {
+  /* Palet sengaja dibatasi: satu aksen neon, satu sekunder hemat. */
+  --color-*: initial;
+  --color-ink: #0a0a0a;
+  --color-ink-2: #111111;
+  --color-ink-3: #1a1a1a;
+  --color-bone: #f2efe6;
+  --color-smoke: #a19f96;
+  --color-line: rgb(242 239 230 / 0.12);
+  --color-acid: #c6ff3d;
+  --color-papaya: #ff7a1a;
+  --color-black: #000000;
+  --color-white: #ffffff;
+
+  --font-display: 'Anton', 'Impact', 'Haettenschweiler', 'Arial Narrow Bold', sans-serif;
+  --font-sans: 'Space Grotesk Variable', 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --font-mono:
+    'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, 'Cascadia Mono', 'Menlo', monospace;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-expo: cubic-bezier(0.87, 0, 0.13, 1);
+
+  --animate-blink: blink 1.1s steps(2, jump-none) infinite;
+  --animate-spin-slow: spin-slow 18s linear infinite;
+  --animate-ping-slow: ping-soft 2.4s var(--ease-out-expo) infinite;
+
+  @keyframes spin-slow {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes blink {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0.15;
+    }
+  }
+
+  @keyframes ping-soft {
+    0% {
+      transform: scale(0.6);
+      opacity: 0.85;
+    }
+    100% {
+      transform: scale(2.6);
+      opacity: 0;
+    }
+  }
+}
+
+/* RGB mode (easter egg): hue aksen berputar lewat custom property ter-registrasi. */
+@property --rgb-hue {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 128;
+}
+
+/* ───────────────────────── Base ───────────────────────── */
+
+@layer base {
+  html {
+    background-color: var(--color-ink);
+    color: var(--color-bone);
+    color-scheme: dark;
+    -webkit-tap-highlight-color: transparent;
+    text-size-adjust: 100%;
+  }
+
+  html.is-loading {
+    overflow: hidden;
+  }
+
+  body {
+    min-height: 100svh;
+    background-color: var(--color-ink);
+    font-family: var(--font-sans);
+    overflow-x: clip;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background-color: var(--color-acid);
+    color: var(--color-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-acid);
+    outline-offset: 3px;
+  }
+
+  html.rgb-mode {
+    --color-acid: oklch(0.92 0.22 var(--rgb-hue));
+    animation: rgb-hue 2.4s linear infinite;
+  }
+
+  @keyframes rgb-hue {
+    to {
+      --rgb-hue: 488;
+    }
+  }
+}
+
+/* ───────────────────────── Utilities ───────────────────────── */
+
+/* Label HUD: monospace kecil, kapital, tracking lebar. */
+@utility hud {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* Tipografi display raksasa ala poster. */
+@utility display-tight {
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 0.84;
+  letter-spacing: -0.005em;
+  text-transform: uppercase;
+}
+
+@utility text-outline {
+  color: transparent;
+  -webkit-text-stroke: var(--outline-width, 1.5px) var(--outline-color, var(--color-bone));
+}
+
+@utility bg-grid {
+  background-image:
+    linear-gradient(to right, var(--color-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-line) 1px, transparent 1px);
+  background-size: var(--grid-size, 6rem) var(--grid-size, 6rem);
+}
+
+@utility scanlines {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgb(0 0 0 / 0.24) 0 1px,
+    transparent 1px 3px
+  );
+}
+
+@utility noise {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@utility gutter-x {
+  padding-inline: max(1rem, 4.5vw);
+}
