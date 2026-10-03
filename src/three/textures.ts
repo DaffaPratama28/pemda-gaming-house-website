@@ -244,10 +244,10 @@ export function pixelTexture(kind: PixelKind) {
  * Overlay HUD kartu pemain (transparan), digambar setinggi 1024px.
  * Banner bawah opaque menutup porsi `banner` dari tinggi kartu.
  */
-export function cardHudTexture(hud: CardHud, banner: number) {
-  return memo(`hud:${hud.name}:${hud.level}:${banner}`, () => {
-    const width = 768
+export function cardHudTexture(hud: CardHud, banner: number, aspect = 3 / 4) {
+  return memo(`hud:${hud.name}:${hud.level}:${banner}:${aspect.toFixed(3)}`, () => {
     const height = 1024
+    const width = Math.round(height * aspect)
     const radius = 36
     const { canvas, context } = createCanvas(width, height)
 

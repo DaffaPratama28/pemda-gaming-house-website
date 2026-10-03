@@ -11,7 +11,8 @@ export const motion = {
   /** `velocity` = px per frame (60fps) yang sudah dihaluskan; tanda = arah scroll. */
   scroll: { y: 0, velocity: 0, direction: 1, progress: 0 },
   hero: { intro: 0, progress: 0 },
-  spotlight: { progress: 0 },
+  /** `reveal` 0..1 = wipe foto spotlight (1 = terlihat penuh). */
+  spotlight: { progress: 0, reveal: 0 },
   arsenal: { active: -1 },
   rgb: false,
 }

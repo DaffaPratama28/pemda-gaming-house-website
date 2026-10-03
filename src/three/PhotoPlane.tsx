@@ -75,8 +75,8 @@ export function PhotoPlane({
   const pointer = useRef({ u: 0.5, v: 0.5, inside: false })
 
   const hudTexture = useMemo(
-    () => (hud ? cardHudTexture(hud, photo.crop.banner) : null),
-    [hud, photo.crop.banner],
+    () => (hud ? cardHudTexture(hud, photo.crop.banner, aspect) : null),
+    [hud, photo.crop.banner, aspect],
   )
   const glowMap = useMemo(() => glowTexture(), [])
 
