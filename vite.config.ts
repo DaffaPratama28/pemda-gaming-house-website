@@ -16,11 +16,21 @@ function resolveSiteUrl(env: Record<string, string>): string {
   return raw.replace(/\/+$/, '')
 }
 
-/** Replaces the `__SITE_URL__` token in index.html (og:image, og:url, canonical). */
+/**
+ * Replaces the `__SITE_URL__` token in index.html (og:image, og:url, canonical).
+ * Without a known origin, canonical & og:url are dropped (relative values are invalid).
+ */
 function siteUrlPlugin(siteUrl: string): Plugin {
   return {
     name: 'pgh:site-url',
-    transformIndexHtml: (html) => html.replaceAll('__SITE_URL__', siteUrl),
+    transformIndexHtml: (html) => {
+      const withoutUrlTags = siteUrl
+        ? html
+        : html
+            .replace(/\s*<link rel="canonical"[^>]*>/, '')
+            .replace(/\s*<meta property="og:url"[^>]*>/, '')
+      return withoutUrlTags.replaceAll('__SITE_URL__', siteUrl)
+    },
   }
 }
 
