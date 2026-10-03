@@ -69,7 +69,35 @@ export default defineConfig(({ mode }) => {
       ]),
     ],
     build: {
-      chunkSizeWarningLimit: 1100,
+      // three.js + R3F memang besar (~240 KB gzip), tapi di-lazy-load setelah first paint.
+      chunkSizeWarningLimit: 1000,
+      rolldownOptions: {
+        output: {
+          // Vendor dipisah dari kode aplikasi agar cache browser tetap valid antar-deploy.
+          // vendor-react punya prioritas tertinggi supaya dependensi bersama (scheduler)
+          // tidak tersedot ke vendor-three, yang harus tetap lazy (tidak dimuat di awal).
+          codeSplitting: {
+            groups: [
+              {
+                name: 'vendor-react',
+                test: /node_modules[\\/](react|react-dom|scheduler)[\\/]/,
+                priority: 30,
+              },
+              {
+                name: 'vendor-three',
+                test: /node_modules[\\/](three|three-stdlib|@react-three|react-reconciler|its-fine|suspend-react|react-use-measure|zustand)[\\/]/,
+                priority: 20,
+              },
+              {
+                // Tanpa @gsap/react: ia bergantung pada react (CJS) di chunk utama → siklus.
+                name: 'vendor-motion',
+                test: /node_modules[\\/](gsap|lenis)[\\/]/,
+                priority: 10,
+              },
+            ],
+          },
+        },
+      },
     },
   }
 })

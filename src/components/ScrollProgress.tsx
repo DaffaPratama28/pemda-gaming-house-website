@@ -35,7 +35,7 @@ export function ScrollProgress() {
       </div>
       <div
         aria-hidden="true"
-        className="hud pointer-events-none fixed right-5 bottom-5 z-[70] hidden text-bone opacity-0 mix-blend-difference transition-opacity duration-500 md:block"
+        className="hud pointer-events-none fixed top-1/2 right-3 z-[70] hidden -translate-y-1/2 text-bone opacity-0 mix-blend-difference transition-opacity duration-500 [writing-mode:vertical-rl] md:block"
       >
         Scroll <span ref={labelRef}>000</span>%
       </div>
