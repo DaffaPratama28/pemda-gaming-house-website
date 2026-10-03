@@ -98,11 +98,12 @@ export function Preloader({ onComplete }: Props) {
           .add(finish, '-=0.85')
       }
 
-      const tick = () => {
+      const tick = (_time: number, deltaTime: number) => {
         const elapsed = (performance.now() - start) / 1000
         const timeCap = Math.min(1, elapsed / minDuration)
         const target = elapsed > MAX_DURATION ? 1 : Math.min(getLoadProgress(), timeCap)
-        state.value += (target - state.value) * 0.1
+        // Easing berbasis waktu: tetap mulus walau FPS turun di perangkat lemah.
+        state.value += (target - state.value) * (1 - Math.exp(-deltaTime / 160))
         if (target === 1 && state.value > 0.995) state.value = 1
 
         const percent = Math.round(state.value * 100)

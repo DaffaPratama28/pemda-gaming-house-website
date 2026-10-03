@@ -14,8 +14,14 @@ export function ScrollProgress() {
       if (Math.abs(progress - last) < 0.0005) return
       last = progress
       if (barRef.current) barRef.current.style.transform = `scaleX(${progress})`
-      if (labelRef.current) {
-        labelRef.current.textContent = String(Math.round(progress * 100)).padStart(3, '0')
+      const label = labelRef.current
+      if (label) {
+        label.textContent = String(Math.round(progress * 100)).padStart(3, '0')
+        // Di hero sudah ada indikator scroll sendiri.
+        label.parentElement?.classList.toggle(
+          'opacity-0',
+          motion.scroll.y < window.innerHeight * 0.6,
+        )
       }
     }
     gsap.ticker.add(tick)
@@ -29,7 +35,7 @@ export function ScrollProgress() {
       </div>
       <div
         aria-hidden="true"
-        className="hud pointer-events-none fixed right-5 bottom-5 z-[70] hidden text-bone mix-blend-difference md:block"
+        className="hud pointer-events-none fixed right-5 bottom-5 z-[70] hidden text-bone opacity-0 mix-blend-difference transition-opacity duration-500 md:block"
       >
         Scroll <span ref={labelRef}>000</span>%
       </div>

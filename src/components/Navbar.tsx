@@ -99,7 +99,10 @@ export function Navbar() {
             </span>
           </button>
 
-          <nav aria-label="Navigasi utama" className="pointer-events-auto hidden lg:block">
+          <nav
+            aria-label="Navigasi utama"
+            className="pointer-events-auto mr-56 ml-auto hidden xl:block"
+          >
             <ul className="flex items-center gap-8">
               {NAV_LINKS.map((link) => (
                 <li key={link.id}>
@@ -130,7 +133,7 @@ export function Navbar() {
             aria-expanded={menuOpen}
             aria-controls="mobile-menu"
             aria-label={menuOpen ? 'Tutup menu' : 'Buka menu'}
-            className="pointer-events-auto relative flex size-11 items-center justify-center lg:hidden"
+            className="pointer-events-auto relative flex size-11 items-center justify-center xl:hidden"
           >
             <span
               className={cn(
@@ -151,7 +154,7 @@ export function Navbar() {
       {/* Tombol JOIN di luar header agar warnanya tidak ikut blend difference. */}
       <div
         className={cn(
-          'fixed top-0 right-0 z-[81] hidden h-22 items-center pr-[max(1rem,4.5vw)] lg:flex',
+          'fixed top-0 right-0 z-[81] hidden h-22 items-center pr-[max(1rem,4.5vw)] xl:flex',
           hideOnScroll,
         )}
       >

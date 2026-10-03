@@ -83,7 +83,7 @@ export function MobileMenu({ open, onClose, onNavigate, returnFocusRef }: Props)
       role="dialog"
       aria-modal="true"
       aria-label="Menu navigasi"
-      className="fixed inset-0 z-[75] flex flex-col justify-between bg-ink pt-24 pb-8 lg:hidden"
+      className="fixed inset-0 z-[75] flex flex-col justify-between bg-ink pt-24 pb-8 xl:hidden"
       style={{ visibility: 'hidden', clipPath: 'inset(0% 0% 100% 0%)' }}
     >
       <div aria-hidden="true" className="bg-grid absolute inset-0 opacity-30 [--grid-size:4rem]" />
