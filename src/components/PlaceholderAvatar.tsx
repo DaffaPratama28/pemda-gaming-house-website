@@ -6,13 +6,39 @@ type Props = {
   className?: string
   /** Ukuran inisial (CSS font-size). */
   initialSize?: string
+  /** Tampilkan label HUD (matikan bila induk merender label sendiri). */
+  labels?: boolean
+}
+
+/** Label HUD "NO SIGNAL / FOTO MENYUSUL" di atas placeholder. */
+export function PlaceholderLabels() {
+  return (
+    <>
+      <div
+        aria-hidden="true"
+        className="hud absolute top-3 left-3 flex items-center gap-2 text-bone/80"
+      >
+        <span className="size-1.5 animate-blink rounded-full bg-papaya" />
+        No signal
+      </div>
+      <div aria-hidden="true" className="hud absolute top-3 right-3 text-bone/50">
+        Foto menyusul
+      </div>
+    </>
+  )
 }
 
 /**
  * Placeholder anggota yang belum punya foto: inisial raksasa + gradient aksen,
  * siluet, noise, scanline, dan glitch saat hover. Sengaja tampak "by design".
  */
-export function PlaceholderAvatar({ name, accent, className, initialSize = '13rem' }: Props) {
+export function PlaceholderAvatar({
+  name,
+  accent,
+  className,
+  initialSize = '13rem',
+  labels = true,
+}: Props) {
   const initial = name.charAt(0).toUpperCase()
 
   return (
@@ -50,16 +76,7 @@ export function PlaceholderAvatar({ name, accent, className, initialSize = '13re
       </span>
       <div aria-hidden="true" className="noise absolute inset-0 opacity-[0.16] mix-blend-overlay" />
       <div aria-hidden="true" className="scanlines absolute inset-0 opacity-70" />
-      <div
-        aria-hidden="true"
-        className="hud absolute top-3 left-3 flex items-center gap-2 text-bone/80"
-      >
-        <span className="size-1.5 animate-blink rounded-full bg-papaya" />
-        No signal
-      </div>
-      <div aria-hidden="true" className="hud absolute top-3 right-3 text-bone/50">
-        Foto menyusul
-      </div>
+      {labels && <PlaceholderLabels />}
     </div>
   )
 }
