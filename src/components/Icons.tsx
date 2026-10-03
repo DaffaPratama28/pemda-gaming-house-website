@@ -31,22 +31,9 @@ export const ArrowUpRight = (props: IconProps) => (
   </Svg>
 )
 
-export const ArrowDown = (props: IconProps) => (
-  <Svg {...props}>
-    <path d="M12 4v16M6 14l6 6 6-6" />
-  </Svg>
-)
-
 export const ArrowRight = (props: IconProps) => (
   <Svg {...props}>
     <path d="M4 12h16M14 6l6 6-6 6" />
-  </Svg>
-)
-
-export const Crosshair = (props: IconProps) => (
-  <Svg {...props}>
-    <circle cx="12" cy="12" r="6.5" />
-    <path d="M12 2v5M12 17v5M2 12h5M17 12h5" />
   </Svg>
 )
 

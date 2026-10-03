@@ -6,10 +6,10 @@ import { gsap, ScrollTrigger } from './gsap'
  * oleh scene 3D & animasi ticker. Tidak memicu re-render React sama sekali.
  */
 export const motion = {
-  /** Posisi pointer: px layar + ternormalisasi -1..1 (y ke atas positif). */
-  pointer: { x: 0, y: 0, nx: 0, ny: 0 },
+  /** Posisi pointer ternormalisasi -1..1 (y ke atas positif). */
+  pointer: { nx: 0, ny: 0 },
   /** `velocity` = px per frame (60fps) yang sudah dihaluskan; tanda = arah scroll. */
-  scroll: { y: 0, velocity: 0, direction: 1, progress: 0 },
+  scroll: { y: 0, velocity: 0, progress: 0 },
   hero: { intro: 0, progress: 0 },
   /** `reveal` 0..1 = wipe foto spotlight (1 = terlihat penuh). */
   spotlight: { progress: 0, reveal: 0 },
@@ -26,8 +26,6 @@ export function scrollEnergy(maxPxPerFrame = 60): number {
 export function startMotionTracking(): () => void {
   const onPointerMove = (event: PointerEvent) => {
     const { pointer } = motion
-    pointer.x = event.clientX
-    pointer.y = event.clientY
     pointer.nx = (event.clientX / window.innerWidth) * 2 - 1
     pointer.ny = -((event.clientY / window.innerHeight) * 2 - 1)
   }
@@ -46,7 +44,6 @@ export function startMotionTracking(): () => void {
     lastY = y
     scroll.velocity += (raw - scroll.velocity) * 0.18
     if (Math.abs(scroll.velocity) < 0.01) scroll.velocity = 0
-    if (raw !== 0) scroll.direction = raw > 0 ? 1 : -1
     scroll.y = y
     scroll.progress = Math.min(1, Math.max(0, y / limit))
   }

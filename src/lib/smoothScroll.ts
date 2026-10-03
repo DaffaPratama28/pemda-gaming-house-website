@@ -1,25 +1,11 @@
 import Lenis from 'lenis'
 import { gsap, ScrollTrigger } from './gsap'
 
-/**
- * Lenis disimpan sebagai store modul (bukan React state) supaya event handler
- * di mana pun bisa memakainya, dan komponen bisa berlangganan via `useLenis()`.
- */
+/** Instance Lenis aktif (null saat reduced motion → scroll native). */
 let lenis: Lenis | null = null
-const listeners = new Set<() => void>()
-const notify = () => listeners.forEach((listener) => listener())
 
 const easeInOutExpo = (t: number) =>
   t === 0 ? 0 : t === 1 ? 1 : t < 0.5 ? 2 ** (20 * t - 10) / 2 : (2 - 2 ** (-20 * t + 10)) / 2
-
-export const getLenis = () => lenis
-
-export function subscribeLenis(listener: () => void) {
-  listeners.add(listener)
-  return () => {
-    listeners.delete(listener)
-  }
-}
 
 /** Menyalakan smooth scroll + sinkronisasi dengan ScrollTrigger. Mengembalikan cleanup. */
 export function startSmoothScroll(): () => void {
@@ -37,16 +23,13 @@ export function startSmoothScroll(): () => void {
   const raf = (time: number) => instance.raf(time * 1000)
   gsap.ticker.add(raf)
   gsap.ticker.lagSmoothing(0)
-
   lenis = instance
-  notify()
 
   return () => {
     gsap.ticker.remove(raf)
     gsap.ticker.lagSmoothing(500, 33)
     instance.destroy()
     if (lenis === instance) lenis = null
-    notify()
   }
 }
 

@@ -12,18 +12,10 @@ type Props = {
   priority?: boolean
   /** Isi banner bawah. Tingginya minimal `photo.crop.banner` dari frame. */
   banner?: ReactNode
-  bannerClassName?: string
 }
 
 /** Foto dengan crop konsisten (lib/photo) + banner bawah yang selalu menutup area dagu. */
-export function CroppedPhoto({
-  photo,
-  aspect,
-  className,
-  priority,
-  banner,
-  bannerClassName,
-}: Props) {
+export function CroppedPhoto({ photo, aspect, className, priority, banner }: Props) {
   return (
     <div className={cn('relative overflow-hidden', className)} style={{ aspectRatio: aspect }}>
       <img
@@ -39,10 +31,7 @@ export function CroppedPhoto({
         className="select-none"
       />
       <div
-        className={cn(
-          'absolute inset-x-0 bottom-0 flex items-center border-t-2 border-acid bg-ink',
-          bannerClassName,
-        )}
+        className="absolute inset-x-0 bottom-0 flex items-center border-t-2 border-acid bg-ink"
         style={{ minHeight: `${photo.crop.banner * 100}%` }}
       >
         {banner}

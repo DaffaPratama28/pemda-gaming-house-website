@@ -9,7 +9,6 @@ export const COLORS = {
   papaya: '#ff7a1a',
   cyan: '#3de0ff',
   pink: '#ff4fa3',
-  yellow: '#ffd23d',
 } as const
 
 /** Material neon: emissive tanpa tone mapping supaya warnanya "menyala". */
@@ -60,7 +59,6 @@ export const materials = {
   neonPapaya: neon(COLORS.papaya),
   neonCyan: neon(COLORS.cyan),
   neonPink: neon(COLORS.pink),
-  neonYellow: neon(COLORS.yellow),
 }
 
 export type MaterialName = keyof typeof materials
@@ -71,5 +69,4 @@ export const NEON_MATERIALS = [
   materials.neonPapaya,
   materials.neonCyan,
   materials.neonPink,
-  materials.neonYellow,
 ]

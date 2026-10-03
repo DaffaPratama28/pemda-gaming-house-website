@@ -9,9 +9,7 @@ ScrollTrigger.config({ ignoreMobileResize: true })
 /** Easing konsisten di seluruh situs (padanan CSS: --ease-out-expo / --ease-in-out-expo). */
 export const EASE = {
   out: 'power4.out',
-  expo: 'expo.out',
   inOut: 'expo.inOut',
-  soft: 'power2.out',
 } as const
 
 /** Breakpoint & preferensi yang dipakai `gsap.matchMedia()`. */

@@ -1,5 +1,4 @@
 import type { Photo } from '../data/content'
-import { cn } from '../lib/cn'
 import { CARD_ASPECT } from '../lib/photo'
 import { CroppedPhoto } from './CroppedPhoto'
 import { HudCorners } from './HudCorners'
@@ -11,7 +10,6 @@ type Props = {
   role: string
   rank: string
   level: number
-  className?: string
   priority?: boolean
 }
 
@@ -19,14 +17,9 @@ type Props = {
  * Kartu pemain versi DOM. Dipakai sebagai layout anchor + fallback untuk kartu
  * WebGL di hero (tampilan dibuat semirip mungkin dengan tekstur HUD 3D).
  */
-export function PlayerCard({ photo, name, number, role, rank, level, className, priority }: Props) {
+export function PlayerCard({ photo, name, number, role, rank, level, priority }: Props) {
   return (
-    <figure
-      className={cn(
-        'relative isolate overflow-hidden rounded-[1.1rem] border border-bone/20 bg-ink-2 shadow-[0_40px_120px_-40px_rgb(198_255_61/0.35)]',
-        className,
-      )}
-    >
+    <figure className="relative isolate overflow-hidden rounded-[1.1rem] border border-bone/20 bg-ink-2 shadow-[0_40px_120px_-40px_rgb(198_255_61/0.35)]">
       <CroppedPhoto
         photo={photo}
         aspect={CARD_ASPECT}

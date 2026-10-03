@@ -1,9 +1,6 @@
-import { cn } from '../lib/cn'
-
 type Props = {
   name: string
   accent: string
-  className?: string
   /** Ukuran inisial (CSS font-size). */
   initialSize?: string
   /** Tampilkan label HUD (matikan bila induk merender label sendiri). */
@@ -32,20 +29,14 @@ export function PlaceholderLabels() {
  * Placeholder anggota yang belum punya foto: inisial raksasa + gradient aksen,
  * siluet, noise, scanline, dan glitch saat hover. Sengaja tampak "by design".
  */
-export function PlaceholderAvatar({
-  name,
-  accent,
-  className,
-  initialSize = '13rem',
-  labels = true,
-}: Props) {
+export function PlaceholderAvatar({ name, accent, initialSize = '13rem', labels = true }: Props) {
   const initial = name.charAt(0).toUpperCase()
 
   return (
     <div
       role="img"
       aria-label={`Placeholder foto ${name}: foto menyusul`}
-      className={cn('glitch-host relative h-full w-full overflow-hidden bg-ink-2', className)}
+      className="glitch-host relative h-full w-full overflow-hidden bg-ink-2"
       style={{ '--accent': accent }}
     >
       <div

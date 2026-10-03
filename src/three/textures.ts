@@ -74,7 +74,7 @@ function roundedRect(
 }
 
 /** PRNG deterministik (mulberry32): variasi "acak" yang sama di tiap render. */
-export function seeded(seed: number) {
+function seeded(seed: number) {
   let state = seed >>> 0
   return () => {
     state = (state + 0x6d2b79f5) >>> 0

@@ -13,9 +13,9 @@ function bearing(x: number, y: number) {
 const TICKS = Array.from({ length: 36 }, (_, index) => index * 10)
 
 /** Radar HUD bergaya peta: ilustrasi, bukan peta sungguhan. */
-export function Radar({ className }: { className?: string }) {
+export function Radar() {
   return (
-    <figure className={cn('relative mx-auto aspect-square w-full max-w-[34rem]', className)}>
+    <figure className="relative mx-auto aspect-square w-full max-w-[34rem]">
       <svg viewBox="0 0 400 400" aria-hidden="true" className="absolute inset-0 size-full">
         <defs>
           <radialGradient id="radar-fill" cx="50%" cy="50%" r="50%">

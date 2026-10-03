@@ -5,17 +5,13 @@ import { useFinePointer, usePrefersReducedMotion } from './useMediaQuery'
 type Options = {
   /** Rotasi maksimum dalam derajat. */
   max?: number
-  perspective?: number
 }
 
 /**
  * Tilt 3D + glare mengikuti pointer. Posisi glare diekspos lewat CSS variable
  * `--glare-x`, `--glare-y`, `--glare-o` (dipakai class `.tilt-glare`).
  */
-export function useTilt(
-  ref: RefObject<HTMLElement | null>,
-  { max = 9, perspective = 900 }: Options = {},
-) {
+export function useTilt(ref: RefObject<HTMLElement | null>, { max = 9 }: Options = {}) {
   const finePointer = useFinePointer()
   const reduced = usePrefersReducedMotion()
 
@@ -23,7 +19,7 @@ export function useTilt(
     const element = ref.current
     if (!element || !finePointer || reduced) return
 
-    gsap.set(element, { transformPerspective: perspective })
+    gsap.set(element, { transformPerspective: 900 })
     const rotateX = gsap.quickTo(element, 'rotationX', { duration: 0.7, ease: 'power3.out' })
     const rotateY = gsap.quickTo(element, 'rotationY', { duration: 0.7, ease: 'power3.out' })
 
@@ -52,5 +48,5 @@ export function useTilt(
       gsap.killTweensOf(element)
       gsap.set(element, { clearProps: 'transform' })
     }
-  }, [ref, max, perspective, finePointer, reduced])
+  }, [ref, max, finePointer, reduced])
 }

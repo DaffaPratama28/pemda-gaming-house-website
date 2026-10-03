@@ -6,14 +6,13 @@ type Props = {
   /** Nilai awal animasi (lebih besar dari `value` = hitung mundur). */
   from?: number
   suffix?: string
-  className?: string
 }
 
 const formatter = new Intl.NumberFormat('id-ID')
 const format = (value: number, suffix = '') => `${formatter.format(Math.round(value))}${suffix}`
 
 /** Angka yang menghitung naik/turun sekali saat masuk viewport. Nilai final selalu di DOM. */
-export function CountUp({ value, from = 0, suffix = '', className }: Props) {
+export function CountUp({ value, from = 0, suffix = '' }: Props) {
   const ref = useRef<HTMLSpanElement>(null)
 
   useGSAP(
@@ -43,7 +42,7 @@ export function CountUp({ value, from = 0, suffix = '', className }: Props) {
 
   return (
     <>
-      <span ref={ref} aria-hidden="true" className={className}>
+      <span ref={ref} aria-hidden="true">
         {format(value, suffix)}
       </span>
       <span className="sr-only">{format(value, suffix)}</span>

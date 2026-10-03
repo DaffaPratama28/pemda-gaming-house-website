@@ -12,8 +12,6 @@ type Props = {
   scale?: number
   /** Kecepatan rotasi idle (rad/detik) per sumbu; makin cepat saat scroll. */
   spin?: Vec3
-  /** Amplitudo melayang naik-turun. */
-  float?: number
   /** Kekuatan reaksi ke mouse ≈ kedalaman parallax. */
   depth?: number
   /** Pergeseran [x, y, z] pada progres scroll 1 (parallax berbeda tiap objek). */
@@ -27,6 +25,9 @@ type Props = {
 
 const damp = MathUtils.damp
 
+/** Amplitudo melayang naik-turun (unit dunia). */
+const FLOAT_AMPLITUDE = 0.12
+
 /** Pembungkus objek melayang: float idle, parallax mouse, drift scroll, intro bertahap. */
 export function Floating({
   children,
@@ -34,7 +35,6 @@ export function Floating({
   rotation = [0, 0, 0],
   scale = 1,
   spin = [0.08, 0.14, 0],
-  float = 0.12,
   depth = 1,
   drift = [0, 2, 0],
   delay = 0,
@@ -60,7 +60,10 @@ export function Floating({
 
     const x = position[0] + nx * 0.35 * depth + drift[0] * progress
     const y =
-      position[1] + Math.sin(time * 0.8 + seed) * float + ny * 0.25 * depth + drift[1] * progress
+      position[1] +
+      Math.sin(time * 0.8 + seed) * FLOAT_AMPLITUDE +
+      ny * 0.25 * depth +
+      drift[1] * progress
     const z = position[2] + drift[2] * progress - (1 - eased) * 6
     group.position.set(
       damp(group.position.x, x, 3.5, delta),
