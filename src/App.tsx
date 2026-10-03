@@ -6,15 +6,12 @@ import { Preloader } from './components/Preloader'
 import { ScrollProgress } from './components/ScrollProgress'
 import { Toast } from './components/Toast'
 import { useSmoothScrollSetup } from './hooks/useLenis'
-import { completeTask } from './lib/loader'
+import { Hero } from './sections/Hero'
 
 export default function App() {
   useSmoothScrollSetup()
   const [introDone, setIntroDone] = useState(false)
-  const handleIntroDone = useCallback(() => {
-    completeTask('scene')
-    setIntroDone(true)
-  }, [])
+  const handleIntroDone = useCallback(() => setIntroDone(true), [])
 
   return (
     <>
@@ -27,9 +24,12 @@ export default function App() {
       <Preloader onComplete={handleIntroDone} />
       <Navbar />
       <main id="main" className="relative">
-        <section className="grid h-svh place-items-center">
-          <h1 className="display-tight text-[18vw]">{introDone ? 'Ready' : 'Loading'}</h1>
-        </section>
+        <Hero introDone={introDone} />
+        <div className="relative z-10 bg-ink">
+          <section id="manifesto" className="grid h-[150vh] place-items-center bg-ink-2">
+            <p className="display-tight text-[10vw]">Next sections…</p>
+          </section>
+        </div>
       </main>
       <ScrollProgress />
       <Cursor />
