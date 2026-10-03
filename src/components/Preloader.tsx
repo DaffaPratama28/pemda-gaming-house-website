@@ -6,7 +6,7 @@ import { completeTask, getLoadProgress } from '../lib/loader'
 import { setScrollLocked } from '../lib/smoothScroll'
 
 /** Durasi minimum (detik) agar counter sempat "bercerita"; maksimum sebagai jaring pengaman. */
-const MIN_DURATION = 1.5
+const MIN_DURATION = 1.2
 const MAX_DURATION = 6
 
 type Props = {

@@ -1,4 +1,4 @@
-import { StrictMode } from 'react'
+import { startTransition, StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import '@fontsource/anton/latin-400.css'
 import '@fontsource-variable/space-grotesk/wght.css'
@@ -14,8 +14,14 @@ window.scrollTo(0, 0)
 const container = document.getElementById('root')
 if (!container) throw new Error('Elemen #root tidak ditemukan di index.html')
 
-createRoot(container).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)
+const root = createRoot(container)
+
+// Render awal sebagai transition: React memecah pekerjaan render jadi potongan kecil
+// (time slicing) sehingga main thread tidak terblokir satu task panjang saat load.
+startTransition(() => {
+  root.render(
+    <StrictMode>
+      <App />
+    </StrictMode>,
+  )
+})
