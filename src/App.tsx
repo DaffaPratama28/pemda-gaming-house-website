@@ -6,7 +6,16 @@ import { Preloader } from './components/Preloader'
 import { ScrollProgress } from './components/ScrollProgress'
 import { Toast } from './components/Toast'
 import { useSmoothScrollSetup } from './hooks/useLenis'
+import { Arsenal } from './sections/Arsenal'
+import { FooterCta } from './sections/FooterCta'
+import { Gallery } from './sections/Gallery'
 import { Hero } from './sections/Hero'
+import { Manifesto } from './sections/Manifesto'
+import { Marquee } from './sections/Marquee'
+import { Spotlight } from './sections/Spotlight'
+import { Squad } from './sections/Squad'
+import { Stats } from './sections/Stats'
+import { TheHouse } from './sections/TheHouse'
 
 export default function App() {
   useSmoothScrollSetup()
@@ -23,14 +32,23 @@ export default function App() {
       </a>
       <Preloader onComplete={handleIntroDone} />
       <Navbar />
+
       <main id="main" className="relative">
         <Hero introDone={introDone} />
+        {/* Konten setelah hero naik menutupi hero yang di-pin. */}
         <div className="relative z-10 bg-ink">
-          <section id="manifesto" className="grid h-[150vh] place-items-center bg-ink-2">
-            <p className="display-tight text-[10vw]">Next sections…</p>
-          </section>
+          <Marquee />
+          <Manifesto />
+          <Squad />
+          <Spotlight />
+          <Arsenal />
+          <TheHouse />
+          <Stats />
+          <Gallery />
         </div>
       </main>
+      <FooterCta />
+
       <ScrollProgress />
       <Cursor />
       <GrainOverlay />
