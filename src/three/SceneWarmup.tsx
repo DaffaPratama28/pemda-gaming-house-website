@@ -27,7 +27,12 @@ export function SceneWarmup({ onWarm }: Props) {
     const finish = () => {
       if (!cancelled) onWarm()
     }
-    gl.compileAsync(scene, camera).then(finish, finish)
+    // Tanpa ekstensi paralel, compileAsync tetap sinkron (plus warning): render langsung saja.
+    if (gl.extensions.has('KHR_parallel_shader_compile')) {
+      gl.compileAsync(scene, camera).then(finish, finish)
+    } else {
+      queueMicrotask(finish)
+    }
     return () => {
       cancelled = true
       scene.environment = null
