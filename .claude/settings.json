@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm *)",
+      "Bash(npx *)",
+      "Bash(node *)",
+      "Bash(pnpm *)",
+      "Bash(git *)",
+      "Bash(gh *)",
+      "Bash(ls *)",
+      "Bash(cat *)",
+      "Bash(mkdir *)",
+      "Bash(cp *)",
+      "Bash(mv *)",
+      "Bash(curl *)",
+      "Read(**)",
+      "Edit(**)",
+      "Write(**)"
+    ],
+    "deny": [
+      "Bash(rm -rf /*)",
+      "Bash(rm -rf ~*)",
+      "Bash(git push --force*)",
+      "Bash(git push -f*)",
+      "Read(.env*)"
+    ]
+  }
+}
