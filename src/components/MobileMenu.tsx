@@ -24,9 +24,10 @@ export function MobileMenu({ open, onClose, onNavigate, returnFocusRef }: Props)
       const links = root.querySelectorAll('[data-menu-link]')
       const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
       if (open) {
+        // Sinkron (bukan di dalam timeline) agar link bisa langsung menerima fokus.
+        gsap.set(root, { visibility: 'visible' })
         gsap
           .timeline()
-          .set(root, { visibility: 'visible' })
           .to(root, {
             clipPath: 'inset(0% 0% 0% 0%)',
             duration: reduce ? 0 : 0.9,

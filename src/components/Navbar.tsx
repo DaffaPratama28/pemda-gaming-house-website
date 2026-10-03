@@ -90,7 +90,7 @@ export function Navbar() {
               onLogoClick()
               scrollToTarget(0)
             }}
-            aria-label="PEMDA GAMING HOUSE: kembali ke atas"
+            aria-label="PEMDA/GH, kembali ke atas"
             className="pointer-events-auto flex items-center gap-2.5"
           >
             <LogoMark />

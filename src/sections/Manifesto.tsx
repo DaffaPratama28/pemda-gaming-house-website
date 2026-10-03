@@ -35,7 +35,8 @@ export function Manifesto() {
       mm.add(MEDIA.motion, () => {
         gsap.fromTo(
           '[data-word]',
-          { opacity: 0.14 },
+          // 0.38 = kontras ≥ 3:1 (WCAG AA teks besar) bahkan sebelum kata menyala.
+          { opacity: 0.38 },
           {
             opacity: 1,
             ease: 'none',
