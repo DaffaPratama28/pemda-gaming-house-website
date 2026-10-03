@@ -1,11 +1,24 @@
 let webglSupport: boolean | undefined
 
-/** Cek dukungan WebGL sekali saja; context uji langsung dilepas. */
+/**
+ * Cek dukungan WebGL sekali saja; context uji langsung dilepas.
+ * `failIfMajorPerformanceCaveat` menolak renderer software (tanpa akselerasi GPU):
+ * di perangkat seperti itu scene 3D pasti patah-patah, jadi situs memakai versi DOM.
+ * Override untuk pengujian: `?gl=force` (paksa 3D) atau `?gl=off` (paksa fallback).
+ */
 export function supportsWebGL(): boolean {
   if (webglSupport !== undefined) return webglSupport
+  const override = new URLSearchParams(window.location.search).get('gl')
+  if (override === 'off') {
+    webglSupport = false
+    return webglSupport
+  }
   try {
     const canvas = document.createElement('canvas')
-    const gl = canvas.getContext('webgl2') ?? canvas.getContext('webgl')
+    const options: WebGLContextAttributes = {
+      failIfMajorPerformanceCaveat: override !== 'force',
+    }
+    const gl = canvas.getContext('webgl2', options) ?? canvas.getContext('webgl', options)
     webglSupport = gl !== null
     gl?.getExtension('WEBGL_lose_context')?.loseContext()
   } catch {
