@@ -1,11 +1,12 @@
 import { Canvas, useFrame } from '@react-three/fiber'
-import { Suspense, useRef } from 'react'
+import { Suspense, useCallback, useRef, useState } from 'react'
 import { MathUtils, type Group } from 'three'
 import { GAMES, type GameAsset } from '../data/content'
 import { motion } from '../lib/motion'
 import { Asset } from './assets/Asset'
 import { Glow } from './assets/Glow'
 import { RgbModeDriver } from './SceneSignals'
+import { RenderOnChange, SceneWarmup } from './SceneWarmup'
 import { Studio } from './Studio'
 
 /** Skala tiap aset agar ukurannya seragam di jendela preview. */
@@ -54,20 +55,24 @@ function Carousel() {
 
 /** Jendela preview 3D kecil yang mengikuti kursor di section Arsenal (lazy, desktop). */
 export default function ArsenalPreview({ active }: { active: boolean }) {
+  const [warm, setWarm] = useState(false)
+  const markWarm = useCallback(() => setWarm(true), [])
   return (
     <Canvas
       dpr={[1, Math.min(window.devicePixelRatio || 1, 1.5)]}
       gl={{ antialias: true, alpha: true }}
       camera={{ position: [0, 0, 5], fov: 32 }}
-      frameloop={active ? 'always' : 'never'}
+      frameloop={active && warm ? 'always' : 'never'}
       resize={{ offsetSize: true }}
       style={{ pointerEvents: 'none' }}
     >
       <Suspense fallback={null}>
-        <Studio quality="low" />
+        <Studio />
         <Glow size={4.2} opacity={0.3} position={[0, 0, -1.5]} />
         <Carousel />
         <RgbModeDriver />
+        <SceneWarmup onWarm={markWarm} />
+        <RenderOnChange signal={warm} />
       </Suspense>
     </Canvas>
   )

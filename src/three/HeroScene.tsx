@@ -1,6 +1,6 @@
 import { PerformanceMonitor } from '@react-three/drei'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { Suspense, useState, type RefObject } from 'react'
+import { Suspense, useCallback, useState, type RefObject } from 'react'
 import { MathUtils, type Group } from 'three'
 import { RIDHO_PHOTO } from '../data/content'
 import { usePrefersReducedMotion } from '../hooks/useMediaQuery'
@@ -13,6 +13,7 @@ import { CAMERA_FOV, CAMERA_Z, VIEW_HEIGHT } from './constants'
 import { Floating } from './Floating'
 import { PhotoPlane } from './PhotoPlane'
 import { ReadySignal, RgbModeDriver } from './SceneSignals'
+import { RenderOnChange, SceneWarmup } from './SceneWarmup'
 import { Studio } from './Studio'
 import { RIDHO_HUD } from './ridho'
 
@@ -124,19 +125,21 @@ function heroCardTransform(group: Group) {
 export default function HeroScene({ cardRef, active, quality, compact, onReady }: Props) {
   const reduced = usePrefersReducedMotion()
   const [dpr, setDpr] = useState(() => maxDpr(quality))
+  const [warm, setWarm] = useState(false)
+  const markWarm = useCallback(() => setWarm(true), [])
 
   return (
     <Canvas
       dpr={dpr}
       gl={{ antialias: quality === 'high', alpha: true, powerPreference: 'high-performance' }}
       camera={{ position: [0, 0, CAMERA_Z], fov: CAMERA_FOV, near: 0.1, far: 80 }}
-      frameloop={active ? (reduced ? 'demand' : 'always') : 'never'}
+      frameloop={!active || !warm ? 'never' : reduced ? 'demand' : 'always'}
       resize={{ offsetSize: true }}
       style={{ pointerEvents: 'none' }}
     >
       <PerformanceMonitor onDecline={() => setDpr(1)} />
       <Suspense fallback={null}>
-        <Studio quality={quality} />
+        <Studio />
         <CameraRig />
         <PhotoPlane
           anchorRef={cardRef}
@@ -147,6 +150,8 @@ export default function HeroScene({ cardRef, active, quality, compact, onReady }
         />
         <HeroObjects compact={compact} quality={quality} />
         <RgbModeDriver />
+        <SceneWarmup onWarm={markWarm} />
+        <RenderOnChange signal={warm} />
         <ReadySignal onReady={onReady} />
       </Suspense>
     </Canvas>

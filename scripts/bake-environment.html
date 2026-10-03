@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>PGH · Bake environment</title>
+  </head>
+  <body style="margin: 0; padding: 24px; background: #111; color: #eee; font: 14px/1.6 monospace">
+    <h1 style="font-size: 16px">Bake environment (PMREM → CubeUV PNG)</h1>
+    <p>
+      Jalankan <code>npm run dev</code>, buka <code>/scripts/bake-environment.html</code>, lalu
+      simpan hasilnya sebagai <code>src/three/studio-env.png</code>.
+    </p>
+    <p id="status">Baking…</p>
+    <p><a id="download" download="studio-env.png" style="color: #c6ff3d">Download PNG</a></p>
+    <img id="preview" alt="Preview CubeUV" style="max-width: 100%" />
+    <script type="module" src="./bake-environment.ts"></script>
+  </body>
+</html>

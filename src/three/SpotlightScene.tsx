@@ -1,5 +1,5 @@
 import { Canvas, useThree } from '@react-three/fiber'
-import { Suspense, type RefObject } from 'react'
+import { Suspense, useCallback, useState, type RefObject } from 'react'
 import { RIDHO_PHOTO } from '../data/content'
 import { usePrefersReducedMotion } from '../hooks/useMediaQuery'
 import { maxDpr, type Quality } from '../lib/device'
@@ -12,6 +12,7 @@ import { Floating } from './Floating'
 import { PhotoPlane } from './PhotoPlane'
 import { RIDHO_HUD } from './ridho'
 import { ReadySignal, RgbModeDriver } from './SceneSignals'
+import { RenderOnChange, SceneWarmup } from './SceneWarmup'
 import { Studio } from './Studio'
 
 type Vec3 = [number, number, number]
@@ -76,17 +77,19 @@ function FrontObjects() {
 /** Scene spotlight (lazy, desktop): foto Ridho dengan reveal shader + objek 3D di depan. */
 export default function SpotlightScene({ photoRef, active, quality, onReady }: Props) {
   const reduced = usePrefersReducedMotion()
+  const [warm, setWarm] = useState(false)
+  const markWarm = useCallback(() => setWarm(true), [])
   return (
     <Canvas
       dpr={[1, maxDpr(quality)]}
       gl={{ antialias: quality === 'high', alpha: true, powerPreference: 'high-performance' }}
       camera={{ position: [0, 0, CAMERA_Z], fov: CAMERA_FOV, near: 0.1, far: 80 }}
-      frameloop={active ? (reduced ? 'demand' : 'always') : 'never'}
+      frameloop={!active || !warm ? 'never' : reduced ? 'demand' : 'always'}
       resize={{ offsetSize: true }}
       style={{ pointerEvents: 'none' }}
     >
       <Suspense fallback={null}>
-        <Studio quality={quality} />
+        <Studio />
         <PhotoPlane
           anchorRef={photoRef}
           photo={RIDHO_PHOTO}
@@ -98,6 +101,8 @@ export default function SpotlightScene({ photoRef, active, quality, onReady }: P
         />
         <FrontObjects />
         <RgbModeDriver />
+        <SceneWarmup onWarm={markWarm} />
+        <RenderOnChange signal={warm} />
         <ReadySignal onReady={onReady} />
       </Suspense>
     </Canvas>
