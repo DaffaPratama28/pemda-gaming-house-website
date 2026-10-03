@@ -2,23 +2,19 @@ import { PerformanceMonitor } from '@react-three/drei'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { Suspense, useState, type RefObject } from 'react'
 import { MathUtils, type Group } from 'three'
-import { MEMBERS, RIDHO_PHOTO, RIDHO_PROFILE } from '../data/content'
+import { RIDHO_PHOTO } from '../data/content'
 import { usePrefersReducedMotion } from '../hooks/useMediaQuery'
 import { maxDpr, type Quality } from '../lib/device'
 import { motion } from '../lib/motion'
 import { CARD_ASPECT } from '../lib/photo'
-import { Coin } from './assets/Coin'
-import { Crystal } from './assets/Crystal'
-import { Dice } from './assets/Dice'
-import { Gamepad } from './assets/Gamepad'
-import { Headset } from './assets/Headset'
-import { Keycap, type KeycapTone } from './assets/Keycap'
+import { Asset, type AssetKind } from './assets/Asset'
+import type { KeycapTone } from './assets/Keycap'
 import { CAMERA_FOV, CAMERA_Z, VIEW_HEIGHT } from './constants'
 import { Floating } from './Floating'
 import { PhotoPlane } from './PhotoPlane'
 import { ReadySignal, RgbModeDriver } from './SceneSignals'
 import { Studio } from './Studio'
-import type { CardHud } from './textures'
+import { RIDHO_HUD } from './ridho'
 
 type Vec3 = [number, number, number]
 
@@ -31,20 +27,8 @@ type Props = {
   onReady: () => void
 }
 
-const ridho = MEMBERS.find((member) => member.id === 'ridho')
-
-const RIDHO_HUD: CardHud = {
-  name: ridho?.name ?? 'Ridho',
-  number: ridho?.number ?? '02',
-  role: RIDHO_PROFILE.role,
-  rank: RIDHO_PROFILE.rank,
-  level: RIDHO_PROFILE.level,
-}
-
-type Kind = 'gamepad' | 'headset' | 'keycap' | 'coin' | 'crystal' | 'dice'
-
 type HeroItem = {
-  kind: Kind
+  kind: AssetKind
   label?: string
   tone?: KeycapTone
   /** x, y = fraksi setengah viewport (-1..1); z = kedalaman dunia. */
@@ -61,7 +45,7 @@ type HeroItem = {
 
 // prettier-ignore
 const DESKTOP_ITEMS: HeroItem[] = [
-  { kind: 'gamepad', at: [0.13, -0.6, 1.6], scale: 0.6, rotation: [0.5, -0.55, 0.2], spin: [0, 0.16, 0], depth: 1.4, drift: [-1, 4.2, 2.6], delay: 0.12 },
+  { kind: 'gamepad', at: [0.02, -0.74, 1.6], scale: 0.58, rotation: [0.5, -0.55, 0.2], spin: [0, 0.16, 0], depth: 1.4, drift: [-1, 4.2, 2.6], delay: 0.12 },
   { kind: 'headset', at: [0.9, 0.4, -1.4], scale: 0.7, rotation: [0.2, 0.6, -0.2], spin: [0, 0.12, 0.04], depth: 0.7, drift: [0.8, 3.2, 0], delay: 0.28, heavy: true },
   { kind: 'keycap', label: 'P', tone: 'acid', at: [-0.42, 0.56, 0.9], scale: 0.4, rotation: [0.95, 0.3, -0.15], spin: [0.05, 0.2, 0], depth: 1.1, drift: [-0.5, 5, 1.5], delay: 0.05 },
   { kind: 'keycap', label: 'E', at: [-0.12, 0.6, -1.8], scale: 0.36, rotation: [1, -0.4, 0.2], spin: [0.1, 0.18, 0], depth: 0.6, drift: [0, 2.8, 0], delay: 0.2 },
@@ -88,23 +72,6 @@ const COMPACT_ITEMS: HeroItem[] = [
 const heroProgress = () => motion.hero.progress
 const heroIntro = () => motion.hero.intro
 
-function HeroAsset({ item }: { item: HeroItem }) {
-  switch (item.kind) {
-    case 'gamepad':
-      return <Gamepad />
-    case 'headset':
-      return <Headset />
-    case 'keycap':
-      return <Keycap label={item.label ?? 'P'} tone={item.tone} />
-    case 'coin':
-      return <Coin />
-    case 'crystal':
-      return <Crystal />
-    case 'dice':
-      return <Dice />
-  }
-}
-
 function HeroObjects({ compact, quality }: { compact: boolean; quality: Quality }) {
   const size = useThree((state) => state.size)
   const halfHeight = VIEW_HEIGHT / 2
@@ -126,7 +93,7 @@ function HeroObjects({ compact, quality }: { compact: boolean; quality: Quality 
       getProgress={heroProgress}
       getIntro={heroIntro}
     >
-      <HeroAsset item={item} />
+      <Asset kind={item.kind} label={item.label} tone={item.tone} />
     </Floating>
   ))
 }
@@ -164,6 +131,7 @@ export default function HeroScene({ cardRef, active, quality, compact, onReady }
       gl={{ antialias: quality === 'high', alpha: true, powerPreference: 'high-performance' }}
       camera={{ position: [0, 0, CAMERA_Z], fov: CAMERA_FOV, near: 0.1, far: 80 }}
       frameloop={active ? (reduced ? 'demand' : 'always') : 'never'}
+      resize={{ offsetSize: true }}
       style={{ pointerEvents: 'none' }}
     >
       <PerformanceMonitor onDecline={() => setDpr(1)} />
