@@ -1,7 +1,75 @@
+import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv, type Plugin } from 'vite'
 
-// https://vite.dev/config/
-export default defineConfig({
-  plugins: [react()],
+/**
+ * Resolves the public origin used for absolute Open Graph URLs.
+ * Order: SITE_URL (manual) → Vercel production domain → Vercel deployment URL → '' (relative).
+ * Nothing here is secret and nothing is required for the build to succeed.
+ */
+function resolveSiteUrl(env: Record<string, string>): string {
+  const raw =
+    env.SITE_URL ||
+    (env.VERCEL_PROJECT_PRODUCTION_URL && `https://${env.VERCEL_PROJECT_PRODUCTION_URL}`) ||
+    (env.VERCEL_URL && `https://${env.VERCEL_URL}`) ||
+    ''
+  return raw.replace(/\/+$/, '')
+}
+
+/** Replaces the `__SITE_URL__` token in index.html (og:image, og:url, canonical). */
+function siteUrlPlugin(siteUrl: string): Plugin {
+  return {
+    name: 'pgh:site-url',
+    transformIndexHtml: (html) => html.replaceAll('__SITE_URL__', siteUrl),
+  }
+}
+
+/**
+ * Preloads the two above-the-fold font files (Anton + Space Grotesk, latin subset).
+ * Fontsource emits hashed file names, so the tags are injected after bundling.
+ */
+function preloadFontsPlugin(patterns: RegExp[]): Plugin {
+  return {
+    name: 'pgh:preload-fonts',
+    apply: 'build',
+    transformIndexHtml: {
+      order: 'post',
+      handler(_html, ctx) {
+        if (!ctx.bundle) return
+        const files = Object.keys(ctx.bundle).filter((file) =>
+          patterns.some((pattern) => pattern.test(file)),
+        )
+        return files.map((file) => ({
+          tag: 'link',
+          attrs: {
+            rel: 'preload',
+            href: `/${file}`,
+            as: 'font',
+            type: 'font/woff2',
+            crossorigin: '',
+          },
+          injectTo: 'head' as const,
+        }))
+      },
+    },
+  }
+}
+
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), '')
+
+  return {
+    plugins: [
+      react(),
+      tailwindcss(),
+      siteUrlPlugin(resolveSiteUrl(env)),
+      preloadFontsPlugin([
+        /anton-latin-400-normal.*\.woff2$/,
+        /space-grotesk-latin-wght-normal.*\.woff2$/,
+      ]),
+    ],
+    build: {
+      chunkSizeWarningLimit: 1100,
+    },
+  }
 })

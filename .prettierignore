@@ -1,0 +1,6 @@
+dist
+node_modules
+.vercel
+.claude
+package-lock.json
+public
